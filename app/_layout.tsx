@@ -50,6 +50,7 @@ export default function RootLayout() {
       try {
         // Load fonts
         Font.loadAsync('PoppinsBold', require('../assets/fonts/Poppins-Bold.ttf'));
+        Font.loadAsync('PoppinsMedium', require('../assets/fonts/Poppins-Medium.ttf'));
 
         // Artificially delay for two seconds to simulate a slow loading
         // experience. Please remove this if you copy and paste the code!
