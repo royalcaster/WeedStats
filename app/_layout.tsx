@@ -72,11 +72,6 @@ export default function RootLayout() {
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
-      // This tells the splash screen to hide immediately! If we call this after
-      // `setAppIsReady`, then we may see a blank screen while the app is
-      // loading its initial state and rendering its first pixels. So instead,
-      // we hide the splash screen once we know the root view has already
-      // performed layout.
       await SplashScreen.hideAsync();
     }
   }, [appIsReady]);
@@ -86,19 +81,21 @@ export default function RootLayout() {
   }
 
   return (
-    <View style={{flex: 1}} onLayout={onLayoutRootView}>
+    <View style={{flex: 1, backgroundColor: theme.background2}} onLayout={onLayoutRootView}>
       <ThemeContext.Provider value={Colors.dark}>
         <Stack
         screenOptions={{
           headerStyle: {
-            backgroundColor: theme.background1,
+            backgroundColor: theme.background2,
           },
           headerTintColor: 'white',
           headerTitleStyle: {
             fontFamily: 'PoppinsBold',
           },
+          headerShadowVisible: false
         }}>
-          <Stack.Screen name="index" options={{title: i18n.t('signin')}}/>
+          <Stack.Screen name="index" options={{title: "Sign in"}}/>
+          <Stack.Screen name="signup" options={{title: "Create account"}}/>
         </Stack>
       </ThemeContext.Provider>
     </View>

@@ -23,6 +23,7 @@ import translations from '../../constants/languages';
 
 //3rd Party
 import { I18n } from 'i18n-js';
+import { CommonStyles } from '@/constants/CommonStyles';
 
 //--------------------------------------------------------------------------
 //  SETUP
@@ -46,8 +47,8 @@ export default function HomeLayout() {
   
 
   return (
-    <View style={{flex: 1}}>
-      <Text>Home</Text>
+    <View style={[CommonStyles.StackScreenContainer, {backgroundColor: theme.background2}]}>
+      <Text>test</Text>
     </View>
   );
 }

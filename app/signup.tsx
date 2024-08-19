@@ -10,7 +10,7 @@ import translations from "@/constants/languages";
 import { getLocales } from "expo-localization";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-const SignIn = () => {
+const SignUp = () => {
 
     const navigation = useNavigation();
     const theme = useContext(ThemeContext);
@@ -35,8 +35,6 @@ const SignIn = () => {
                 />
             </View>
 
-            
-
             <View style={CommonStyles.signinElement}>
                 <TextInput 
                     textContentType='password'
@@ -59,24 +57,11 @@ const SignIn = () => {
             
             <View style={CommonStyles.signinElement}>
                 <Button 
-                    title={"Sign in"}
+                    title={"Create account"}
                     color={theme.palette4[0]}
                     hovercolor={"rgba(255,255,255,0.25)"}
                     borderradius={10}
-                    onPress={() => router.push('/(home)')}
-                    fontColor={theme.text}
-                    icon={<Text>Icon</Text>}
-                    small={true}
-                />
-            </View>
-
-            <View style={CommonStyles.signinElement}>
-                <Button 
-                    title={"Create account"}
-                    color={theme.background1}
-                    hovercolor={"rgba(255,255,255,0.25)"}
-                    borderradius={10}
-                    onPress={() => router.push('/signup')}
+                    onPress={() => router.push('./(home)')}
                     fontColor={theme.text}
                     icon={<Text>Icon</Text>}
                     small={true}
@@ -87,4 +72,4 @@ const SignIn = () => {
     )
 }
 
-export default SignIn
+export default SignUp
