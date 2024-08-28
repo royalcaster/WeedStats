@@ -2,10 +2,10 @@
   "expo": {
     "name": "WeedStats",
     "slug": "WeedStats",
+    "scheme": "weedstats",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/weedstats_splash.png",
@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.royalcaster.WeedStats"
     },
     "web": {
       "bundler": "metro",
@@ -30,21 +31,23 @@
       "expo-router",
       "expo-localization",
       [
-        "expo-font",
+        "react-native-auth0",
         {
-          "fonts": [
-            "/assets/fonts/Poppins-Black.ttf",
-            "/assets/fonts/Poppins-Bold.ttf",
-            "/assets/fonts/Poppins-Light.ttf",
-            "/assets/fonts/Poppins-Medium.ttf",
-            "/assets/fonts/Poppins-Regular.ttf",
-            "/assets/fonts/Poppins-Thin.ttf"
-          ]
+          "domain": "dev-3l6d646lapzi5iqr.us.auth0.com"
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "745d1412-8cd1-4bb9-a3f0-3639efef0bdf"
+      }
+    },
+    "owner": "royalcaster"
   }
 }

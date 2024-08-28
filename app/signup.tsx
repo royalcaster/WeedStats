@@ -65,6 +65,7 @@ const SignUp = () => {
                     fontColor={theme.text}
                     icon={<Text>Icon</Text>}
                     small={true}
+                    disabled={username === undefined || password === undefined}
                 />
             </View>
 

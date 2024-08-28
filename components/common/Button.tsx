@@ -1,4 +1,5 @@
 //React
+import { adjustColorBrightness } from "@/Service";
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableNativeFeedback } from "react-native";
 
@@ -21,7 +22,7 @@ const Button: React.FC<ButtonProps> = ({ icon, title, color, hovercolor, borderr
     <>
     <View
       style={[
-        { backgroundColor: color,  width: small ? "100%" : "80%", borderRadius: 10},
+        { backgroundColor: disabled ? adjustColorBrightness(color, -0.15) : color,  width: small ? "100%" : "80%", borderRadius: 10},
         styles.container,
       ]}
     >

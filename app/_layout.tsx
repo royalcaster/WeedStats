@@ -23,6 +23,8 @@ import translations from '../constants/languages';
 
 //3rd Party
 import { I18n } from 'i18n-js';
+import {useAuth0, Auth0Provider} from 'react-native-auth0';
+import config from '@/auth0-configuration';
 
 //--------------------------------------------------------------------------
 //  SETUP
@@ -81,23 +83,29 @@ export default function RootLayout() {
   }
 
   return (
-    <View style={{flex: 1, backgroundColor: theme.background2}} onLayout={onLayoutRootView}>
-      <ThemeContext.Provider value={Colors.dark}>
-        <Stack
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: theme.background2,
-          },
-          headerTintColor: 'white',
-          headerTitleStyle: {
-            fontFamily: 'PoppinsBold',
-          },
-          headerShadowVisible: false
-        }}>
-          <Stack.Screen name="index" options={{title: "Sign in"}}/>
-          <Stack.Screen name="signup" options={{title: "Create account"}}/>
-        </Stack>
-      </ThemeContext.Provider>
-    </View>
+    <Auth0Provider
+        domain={config.domain}
+        clientId={config.clientId}
+      >
+      <View style={{flex: 1, backgroundColor: theme.background2}} onLayout={onLayoutRootView}>
+        
+        <ThemeContext.Provider value={Colors.dark}>
+          <Stack
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: theme.background2,
+            },
+            headerTintColor: 'white',
+            headerTitleStyle: {
+              fontFamily: 'PoppinsBold',
+            },
+            headerShadowVisible: false
+          }}>
+            <Stack.Screen name="index" options={{title: "Sign in"}}/>
+            <Stack.Screen name="signup" options={{title: "Create account", animation: "fade_from_bottom"}}/>
+          </Stack>
+        </ThemeContext.Provider>
+      </View>
+    </Auth0Provider>
   );
 }
