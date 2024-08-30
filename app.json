@@ -29,13 +29,8 @@
     },
     "plugins": [
       "expo-router",
-      "expo-localization",
-      [
-        "react-native-auth0",
-        {
-          "domain": "dev-3l6d646lapzi5iqr.us.auth0.com"
-        }
-      ]
+      "@react-native-google-signin/google-signin",
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true

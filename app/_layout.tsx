@@ -23,13 +23,12 @@ import translations from '../constants/languages';
 
 //3rd Party
 import { I18n } from 'i18n-js';
-import {useAuth0, Auth0Provider} from 'react-native-auth0';
 import config from '@/auth0-configuration';
 
 //--------------------------------------------------------------------------
 //  SETUP
 //--------------------------------------------------------------------------
-SplashScreen.preventAutoHideAsync();
+/* SplashScreen.preventAutoHideAsync(); */
 
 // Set the key-value pairs for the different languages you want to support.
 const i18n = new I18n(translations);
@@ -45,7 +44,7 @@ i18n.enableFallback = true;
 export default function RootLayout() {
 
   //States
-  const [appIsReady, setAppIsReady] = useState(false);
+  const [appIsReady, setAppIsReady] = useState<boolean>(false);
 
   useEffect(() => {
     async function prepare() {
@@ -60,35 +59,17 @@ export default function RootLayout() {
       } catch (e) {
         console.warn(e);
       } finally {
-        // Tell the application to render
-        setAppIsReady(true);
+        
       }
     }
-
     prepare();
   }, []);
 
   // Theme & Font
   const theme = useContext(ThemeContext);
-  
-
-  const onLayoutRootView = useCallback(async () => {
-    if (appIsReady) {
-      await SplashScreen.hideAsync();
-    }
-  }, [appIsReady]);
-
-  if (!appIsReady) {
-    return null;
-  }
 
   return (
-    <Auth0Provider
-        domain={config.domain}
-        clientId={config.clientId}
-      >
-      <View style={{flex: 1, backgroundColor: theme.background2}} onLayout={onLayoutRootView}>
-        
+      <View style={{flex: 1, backgroundColor: theme.background2}}>
         <ThemeContext.Provider value={Colors.dark}>
           <Stack
           screenOptions={{
@@ -106,6 +87,5 @@ export default function RootLayout() {
           </Stack>
         </ThemeContext.Provider>
       </View>
-    </Auth0Provider>
-  );
+  )
 }

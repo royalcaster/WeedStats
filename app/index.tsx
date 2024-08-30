@@ -1,5 +1,5 @@
 import { ThemeContext } from "@/contexts/ThemeContext";
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { View, Text, TouchableOpacity, Alert } from "react-native"
 import { CommonStyles } from "@/constants/CommonStyles";
 import Button from "@/components/common/Button";
@@ -10,64 +10,38 @@ import translations from "@/constants/languages";
 import { getLocales } from "expo-localization";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import config from '../auth0-configuration';
+import { Linking } from "react-native";
+import {
+    GoogleSignin,
+    GoogleSigninButton,
+    statusCodes,
+  } from '@react-native-google-signin/google-signin';
 
-//3rd Party
-import { useAuth0 } from "react-native-auth0";
+  import {supabase} from '../utils/supabase';
 
 const SignIn = () => {
 
+    const [user, setUser] = useState<any>(null);
     const navigation = useNavigation();
     const theme = useContext(ThemeContext);
-    const {authorize, clearSession, user, error, getCredentials, isLoading} = useAuth0();
+    const [isInProgress, setIsInProgress] = useState<boolean>(false);
+
+    const EXPO_PUBLIC_GOOGLE_OAUTH_START_URL = process.env.EXPO_PUBLIC_GOOGLE_OAUTH_START_URL || "";
 
     const [username, setUsername] = useState<string | undefined>(undefined);
     const [password, setPassword] = useState<string | undefined>(undefined);
     const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
 
-    const handleLogin = () => {
-        authorize({
-            redirectUrl: 'com.royalcaster.WeedStats.auth0://dev-3l6d646lapzi5iqr.us.auth0.com/android/com.royalcaster.WeedStats/callback',
-        });
-    }
+    useEffect(() => {
 
-    const onLogin = async () => {
-      try {
-        await authorize({
-            redirectUrl: 'com.royalcaster.WeedStats.auth0://dev-3l6d646lapzi5iqr.us.auth0.com/android/com.royalcaster.WeedStats/callback',
-        });
-        let credentials = await getCredentials();
-        if (credentials) {
-          Alert.alert('AccessToken: ' + credentials.accessToken);
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    
-    const loggedIn = user !== undefined && user !== null;
-    
-    const onLogout = async () => {
-    try {
-        await clearSession();
-    } catch (e) {
-        console.log('Log out cancelled');
-    }
-    };
-    
-    /* if (isLoading) {
-    return <View style={CommonStyles.StackScreenContainer}><Text style={{color: "white"}}>Loading</Text></View>;
-    } */
-    
+    },[]);
+
+    GoogleSignin.configure({
+        webClientId: '158741630717-2utkk8ue1hfn18v9q4kioo9q8id942jv.apps.googleusercontent.com', // client ID of type WEB for your server. Required to get the `idToken` on the user object, and for offline access.
+      });
 
     return (
         <View style={[CommonStyles.StackScreenContainer, CommonStyles.signinContainer, {backgroundColor: theme.background2}]}>
-
-            <View>
-                {user && <Text>You are logged in as {user.name}</Text>}
-                {!user && <Text>You are not logged in</Text>}
-                {error && <Text>{error.message}</Text>}
-            </View>
-
             <View style={CommonStyles.signinElement}>
                 <TextInput 
                     textContentType='username'
@@ -104,31 +78,47 @@ const SignIn = () => {
             </View>
             
             <View style={CommonStyles.signinElement}>
-                <Button 
-                    onPress={loggedIn ? onLogout : onLogin}
-                    title={loggedIn ? 'Log Out' : 'Log In'}
-                    color={theme.palette4[0]}
-                    hovercolor={"rgba(255,255,255,0.25)"}
-                    borderradius={10}
-                    fontColor={theme.text}
-                    icon={<Text>Icon</Text>}
-                    small={true}
-                    
+            <GoogleSigninButton
+                size={GoogleSigninButton.Size.Wide}
+                color={GoogleSigninButton.Color.Dark}
+                onPress={async () => {
+                    try {
+                        await GoogleSignin.hasPlayServices();
+                        const userInfo = await GoogleSignin.signIn();
+                        if (userInfo.idToken) {
+                          const {data, error} = await supabase.auth.signInWithIdToken({
+                            provider: 'google',
+                            token: userInfo.idToken,
+                          });
+                          console.log(data, error);
+                        }
+                        else {
+                          throw new Error("No idToken found");
+                        }
+                    } catch (error: any) {
+                        if (error) {
+                            console.debug(error.code);
+                            switch (error.code) {
+                              case statusCodes.SIGN_IN_CANCELLED:
+                                // user cancelled the login flow
+                                break;
+                              case statusCodes.IN_PROGRESS:
+                                // operation (eg. sign in) already in progress
+                                break;
+                              case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+                                // play services not available or outdated
+                                break;
+                              default:
+                              // some other error happened
+                            }
+                          } else {
+                            // an error that's not related to google sign in occurred
+                          }
+                    }
+                }}
+                disabled={isInProgress}
                 />
             </View>
-
-            {/* <View style={CommonStyles.signinElement}>
-                <Button 
-                    title={"Create account"}
-                    color={theme.background1}
-                    hovercolor={"rgba(255,255,255,0.25)"}
-                    borderradius={10}
-                    onPress={() => router.push('/signup')}
-                    fontColor={theme.text}
-                    icon={<Text>Icon</Text>}
-                    small={true}
-                />
-            </View> */}
 
         </View>
     )
