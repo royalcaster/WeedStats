@@ -9,7 +9,7 @@ import { View, Text } from 'react-native';
 // Expo
 import { useFonts } from 'expo-font';
 import * as Font from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, Tabs } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { getLocales } from 'expo-localization';
 
@@ -47,8 +47,35 @@ export default function HomeLayout() {
   
 
   return (
-    <View style={[CommonStyles.StackScreenContainer, {backgroundColor: theme.background2}]}>
-      <Text>test</Text>
-    </View>
+    <Tabs 
+      screenOptions={{
+        tabBarActiveTintColor: theme.palette4[0],
+        tabBarActiveBackgroundColor: theme.background2,
+        tabBarInactiveTintColor: theme.text,
+        tabBarInactiveBackgroundColor: theme.background2,
+        headerShadowVisible: false,
+        headerBackgroundContainerStyle: {
+          borderWidth: 0,
+        },
+        headerTintColor: theme.text,
+        headerStyle: {
+          backgroundColor: theme.background2,
+        }
+      }}>
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Home',
+          /* tabBarIcon: ({ color }) => <FontAwesome size={28} name="home" color={color} />, */
+        }}
+      />
+      <Tabs.Screen
+        name="friends"
+        options={{
+          title: 'Freunde',
+          /* tabBarIcon: ({ color }) => <FontAwesome size={28} name="cog" color={color} />, */
+        }}
+      />
+    </Tabs>
   );
 }

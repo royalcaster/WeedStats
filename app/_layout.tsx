@@ -4,14 +4,15 @@
 // React
 import { useContext, useEffect, useState, useCallback } from 'react';
 import 'react-native-reanimated';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 
 // Expo
 import { useFonts } from 'expo-font';
 import * as Font from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { getLocales } from 'expo-localization';
+import * as SecureStore from 'expo-secure-store'
 
 // Hooks
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -24,6 +25,8 @@ import translations from '../constants/languages';
 //3rd Party
 import { I18n } from 'i18n-js';
 import config from '@/auth0-configuration';
+import { UserContext } from '@/contexts/UserContext';
+import { supabase } from '@/utils/supabase';
 
 //--------------------------------------------------------------------------
 //  SETUP
@@ -45,47 +48,94 @@ export default function RootLayout() {
 
   //States
   const [appIsReady, setAppIsReady] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
+  const segments = useSegments();
+  const router = useRouter();
 
-  useEffect(() => {
-    async function prepare() {
-      try {
-        // Load fonts
-        Font.loadAsync('PoppinsBold', require('../assets/fonts/Poppins-Bold.ttf'));
-        Font.loadAsync('PoppinsMedium', require('../assets/fonts/Poppins-Medium.ttf'));
-
-        // Artificially delay for two seconds to simulate a slow loading
-        // experience. Please remove this if you copy and paste the code!
-        await new Promise(resolve => setTimeout(resolve, 2000));
-      } catch (e) {
-        console.warn(e);
-      } finally {
-        
-      }
-    }
-    prepare();
-  }, []);
-
-  // Theme & Font
+  // Contexts
   const theme = useContext(ThemeContext);
 
+  useEffect(() => {
+    prepare();
+    checkForSession()
+    getUser()
+  }, []);
+
+  // Conditional rendering
+  useEffect(() => {
+    if (user == null) {
+      console.log("Zum Signin screen!");
+      router.replace('/signin');
+    }
+    else if (user && segments[0] == 'signin') {
+      console.log("Zum Homescreen!");
+      router.replace('/(home)/');
+    }
+  }, [user, segments]);
+
+  // Load fonts and assets
+  const prepare = async () => {
+    try {
+      Font.loadAsync('PoppinsBold', require('../assets/fonts/Poppins-Bold.ttf'));
+      Font.loadAsync('PoppinsMedium', require('../assets/fonts/Poppins-Medium.ttf'));
+
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    } catch (e) {
+      console.warn(e);
+    } finally {
+      
+    }
+  }
+
+  const checkForSession = async () => {
+    const { data, error } = await supabase.auth.getSession()
+    if (error) {
+      // Session needs to be refreshed or created
+      const { data, error } = await supabase.auth.refreshSession()
+      const { session, user } = data
+      if (user) {
+        setUser({
+          id: user.id || "",
+          email: user?.email || ""
+        })
+      }
+      console.log("Failed to get a valid session, refreshing...")
+    }
+  }
+
+  const getUser = async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      setUser({
+        id: user.id || "",
+        email: user?.email || ""
+      })
+    }
+  }
+
   return (
-      <View style={{flex: 1, backgroundColor: theme.background2}}>
-        <ThemeContext.Provider value={Colors.dark}>
-          <Stack
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: theme.background2,
-            },
-            headerTintColor: 'white',
-            headerTitleStyle: {
-              fontFamily: 'PoppinsBold',
-            },
-            headerShadowVisible: false
-          }}>
-            <Stack.Screen name="index" options={{title: "Sign in"}}/>
-            <Stack.Screen name="signup" options={{title: "Create account", animation: "fade_from_bottom"}}/>
-          </Stack>
-        </ThemeContext.Provider>
-      </View>
+      
+    <View style={{flex: 1, backgroundColor: theme.background2}}>
+
+      <UserContext.Provider value={{user: user, setUser: (user) => setUser(user)}}>
+      <ThemeContext.Provider value={Colors.dark}>
+
+        <Stack
+        screenOptions={{
+          headerShown: false,
+          headerStyle: {
+            backgroundColor: theme.background2,
+          },
+          headerTintColor: 'white',
+          headerTitleStyle: {
+            fontFamily: 'PoppinsBold',
+          },
+          headerShadowVisible: false
+        }} />
+
+      </ThemeContext.Provider>
+      </UserContext.Provider>
+
+    </View>
   )
 }

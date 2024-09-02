@@ -7,7 +7,8 @@ export const CommonStyles = StyleSheet.create({
     },
     signinContainer: {
         flex: 1,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        alignItems: "center"
     },
     signinElement: {
         marginBottom: 10
