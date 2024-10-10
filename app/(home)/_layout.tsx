@@ -4,7 +4,7 @@
 // React
 import { useContext, useEffect, useState, useCallback } from 'react';
 import 'react-native-reanimated';
-import { View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
 
 // Expo
 import { useFonts } from 'expo-font';
@@ -24,6 +24,7 @@ import translations from '../../constants/languages';
 //3rd Party
 import { I18n } from 'i18n-js';
 import { CommonStyles } from '@/constants/CommonStyles';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 //--------------------------------------------------------------------------
 //  SETUP
@@ -53,6 +54,21 @@ export default function HomeLayout() {
         tabBarActiveBackgroundColor: theme.background2,
         tabBarInactiveTintColor: theme.text,
         tabBarInactiveBackgroundColor: theme.background2,
+        tabBarStyle: {
+          height: 70,
+          backgroundColor: theme.background2,
+          borderColor: theme.background2,
+          shadowColor: theme.background2,
+          paddingBottom: 5
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontFamily: 'PoppinsMedium',
+        },
+        headerTitleStyle: {
+          fontSize: 25,
+          fontFamily: 'PoppinsBold',
+        },
         headerShadowVisible: false,
         headerBackgroundContainerStyle: {
           borderWidth: 0,
@@ -64,16 +80,31 @@ export default function HomeLayout() {
       }}>
       <Tabs.Screen
         name="index"
+        
         options={{
           title: 'Home',
-          /* tabBarIcon: ({ color }) => <FontAwesome size={28} name="home" color={color} />, */
+          tabBarIcon: ({ color, focused }) => {
+            return focused ?
+            <Image 
+              source={require("../../assets/images/logo.png")}
+              style={{width: 50, height: 50}}
+            />
+            :
+            <Image 
+              source={require("../../assets/images/logo_bw.png")}
+              style={{width: 50, height: 50}}
+            />
+          },
         }}
       />
       <Tabs.Screen
-        name="friends"
+        name="settings"
         options={{
-          title: 'Freunde',
-          /* tabBarIcon: ({ color }) => <FontAwesome size={28} name="cog" color={color} />, */
+          title: 'Einstellungen',
+          tabBarIcon: ({ color, focused }) => focused ? 
+          <Ionicons size={28} name="settings-sharp" color={color} />
+          :
+          <Ionicons size={28} name="settings-outline" color={color} />,
         }}
       />
     </Tabs>

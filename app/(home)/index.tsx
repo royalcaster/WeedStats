@@ -19,26 +19,6 @@ const Home = () => {
             
             <Text style={{color: "white"}}>Angemeldet als: {userContext.user?.email}</Text>
 
-            <Button 
-                title="Abmelden"
-                onPress={async () => {
-                    const { error } = await supabase.auth.signOut();
-                    if (error) {
-                        console.error("Error when signing out: " + error);
-                    }
-                    else {
-                        userContext.setUser(null);
-                        router.replace('/signin')
-                    }
-                }}
-                icon={null}
-                borderradius={25}
-                color={theme.background1}
-                fontColor="white"
-                hovercolor={"rgba(255,255,255,0.25)"}
-                small={true}
-            />
-
         </View>
     )
 }

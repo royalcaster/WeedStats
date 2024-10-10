@@ -4,7 +4,7 @@
 // React
 import { useContext, useEffect, useState, useCallback } from 'react';
 import 'react-native-reanimated';
-import { Alert, View } from 'react-native';
+import { Alert, StatusBar, View } from 'react-native';
 
 // Expo
 import { useFonts } from 'expo-font';
@@ -78,8 +78,7 @@ export default function RootLayout() {
     try {
       Font.loadAsync('PoppinsBold', require('../assets/fonts/Poppins-Bold.ttf'));
       Font.loadAsync('PoppinsMedium', require('../assets/fonts/Poppins-Medium.ttf'));
-
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await StatusBar.setBarStyle('light-content');
     } catch (e) {
       console.warn(e);
     } finally {

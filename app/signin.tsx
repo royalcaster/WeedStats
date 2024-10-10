@@ -1,6 +1,6 @@
 import { ThemeContext } from "@/contexts/ThemeContext";
 import { useContext, useEffect, useState } from "react"
-import { View, TouchableOpacity, Text } from "react-native"
+import { View, TouchableOpacity, Text, Image } from "react-native"
 import { CommonStyles } from "@/constants/CommonStyles";
 import { useNavigation } from "expo-router";
 import { TextInput } from "react-native-paper";
@@ -8,6 +8,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import GoogleAuth from "@/components/auth/GoogleAuth";
 import * as SecureStore from 'expo-secure-store';
 import { UserContext } from "@/contexts/UserContext";
+import SectionHeading from "@/components/common/SectionHeading";
 
 const SignIn = () => {
 
@@ -18,10 +19,6 @@ const SignIn = () => {
 
   // Context
   const userContext = useContext(UserContext);
-
-    /* const [username, setUsername] = useState<string | undefined>(undefined);
-    const [password, setPassword] = useState<string | undefined>(undefined);
-    const [passwordVisible, setPasswordVisible] = useState<boolean>(false); */
 
     useEffect(() => {
 
@@ -37,9 +34,21 @@ const SignIn = () => {
       }
 
     return (
-        <View style={[CommonStyles.StackScreenContainer, CommonStyles.signinContainer, {backgroundColor: theme.background2}]}>
+        <View style={[CommonStyles.StackScreenContainer, CommonStyles.signinContainer, {backgroundColor: theme.background2, flexDirection: "column"}]}>
 
-            <View style={CommonStyles.signinElement}>
+            <View style={[CommonStyles.signinElement, {flex: 4}]}>
+              <Image 
+                source={require("../assets/images/icon.png")}
+                style={{width: 100, height: 100}}
+              />
+              <View style={{height: 20}}></View>
+              <Text style={CommonStyles.signInHeading}>Willkommen</Text>
+              <Text style={CommonStyles.signInText}>WeedStats ist der tägliche Begleiter für jeden Cannabis-Liebhaber.</Text>
+            </View>
+
+            <View style={[CommonStyles.signinElement, {alignItems: "center"}]}>
+                <SectionHeading text="LOSLEGEN" color={theme.palette4[0]} />
+                <View style={{height: 20}}></View>
                 <GoogleAuth 
                     saveAccessToken={(accessToken: string, expiresAt: number) => saveAccessToken(accessToken, expiresAt)}
                     saveRefreshToken={(refreshToken: string) => saveRefreshToken(refreshToken)}

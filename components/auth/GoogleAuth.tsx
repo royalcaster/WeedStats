@@ -22,6 +22,7 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({ saveAccessToken, saveRefreshTok
         <GoogleSigninButton
                 size={GoogleSigninButton.Size.Wide}
                 color={GoogleSigninButton.Color.Light}
+                style={{width: "100%", height: 60}}
                 onPress={async () => {
                     try {
                         await GoogleSignin.hasPlayServices();
